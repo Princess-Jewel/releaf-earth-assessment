@@ -26,6 +26,7 @@ git clone [https://github.com/Princess-Jewel/releaf-earth-assessment](https://gi
 ### 2. Install dependencies
 
 cd releaf_earth
+
 npm install
 
 ### 3. Set up environment variables
