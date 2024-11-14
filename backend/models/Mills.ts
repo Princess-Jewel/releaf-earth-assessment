@@ -1,8 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 interface IMills extends Document {
-  name: string;
-  type: string;
+  millName: string;
+  // type: string;
   latitude: number;
   longitude: number;
   p1Amount?: number;
@@ -14,8 +14,8 @@ interface IMills extends Document {
 }
 
 const millsSchema = new Schema<IMills>({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
+  millName: { type: String, required: true },
+  // type: { type: String, required: true },
   latitude: { type: Number, required: true },
   longitude: { type: Number, required: true },
   p1Amount: Number,

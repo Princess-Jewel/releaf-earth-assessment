@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Mills from '../models/Mills';
 
+// Retrieve all markers/mills
 export const getMills = async (req: Request, res: Response) => {
   try {
     const mills = await Mills.find();
@@ -10,4 +11,17 @@ export const getMills = async (req: Request, res: Response) => {
   }
 };
 
-
+// Add a new marker/mill
+export const addMill = async (req: Request, res: Response) => {
+  const { millName, latitude, longitude, capacity, status } = req.body;
+  console.log('millName', millName);
+  try {
+    console.log('millName', millName);
+    const newMill = new Mills({ millName, latitude, longitude, capacity, status });
+    console.log(newMill)
+    await newMill.save();
+    res.status(201).json(newMill);
+  } catch (error) {
+    res.status(400).json({ message: 'Invalid data provided' });
+  }
+};
