@@ -46,7 +46,7 @@
    
   "dev": "nodemon --exec tsx server.ts",
   "build": "npm install && npx tsc",
-  "start": "node server.js"
+  "start": "node ./dist/server.js"
  
   }
 }
