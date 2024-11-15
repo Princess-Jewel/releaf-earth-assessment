@@ -7,7 +7,7 @@ export const getMills = async (req: Request, res: Response) => {
   try {
     const mills = await Mills.find();
     // Respond with a success message and the retrieved mill(s) data
-    res.status(201).json({
+    res.status(200).json({
       message: "Mill retrieved successfully!",
       data: mills,
     });

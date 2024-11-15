@@ -1,6 +1,7 @@
-# Map Markers for Mills and PKS Dumpsites
 
-This project displays markers on a map for mills and Palm Kernel Shell (PKS) dumpsites. It uses **Mapbox GL** for interactive map rendering, **TailwindCSS** for styling, and **TypeScript** for type safety and improved development experience. The project allows users to visualize mill data and PKS dumpsites with color-coded markers and popups that contain relevant information about each location.
+# **PKS Dumpsite Management System**
+
+The PKS Dumpsite Management System is a full-stack application designed to manage, display, and update dumpsite information. The system includes a dynamic map-based frontend interface using React and Mapbox and a robust backend powered by Node.js and Express. It uses **Mapbox GL** for interactive map rendering, **TailwindCSS** for styling, and **TypeScript** for type safety and improved development experience. The project allows users to visualize mill data and PKS dumpsites with color-coded markers and popups that contain relevant information about each location.
 
 ## Features
 
@@ -9,13 +10,40 @@ This project displays markers on a map for mills and Palm Kernel Shell (PKS) dum
 - **Color-Coded Markers:** Markers are color-coded based on the last transaction date of the mill (Green for recent, Yellow for older than one week, Red for older than two weeks).
 - **Interactive Map:** Click on markers to view popups with detailed information about each mill or dumpsite.
 
-## Technologies Used
+## **Features**
 
-- **Mapbox GL:** A powerful library for rendering interactive maps.
-- **TailwindCSS:** A utility-first CSS framework for rapidly building custom designs.
-- **TypeScript:** A statically typed superset of JavaScript, providing type safety and reducing runtime errors.
+### **Frontend**
+- Interactive map with dynamic markers and popups (Mapbox).
+- Add new dumpsites with details such as latitude, longitude, capacity, and status.
+- Edit existing dumpsite information.
+- Responsive forms for adding and editing dumpsites.
+- Real-time updates with smooth UI interactions.
 
-## Installation
+### **Backend**
+- RESTful API to handle CRUD operations for dumpsites.
+- Secure data handling with validation.
+- Integration with a database (MongoDB or any preferred DB).
+- Error handling and meaningful API responses.
+
+---
+
+## Tech Stack
+
+
+### **Frontend**
+- **React**: For building the user interface.
+- **Mapbox GL**: For interactive maps.
+- **TailwindCSS**: For styling components.
+
+### **Backend**
+- **Node.js**: Runtime environment.
+- **Express.js**: Backend framework.
+- **MongoDB**: Database for persisting dumpsite data.
+- **Mongoose**: ODM for MongoDB.
+
+---
+
+## Setup Instructions
 
 To get the project up and running locally, follow these steps:
 
@@ -23,23 +51,131 @@ To get the project up and running locally, follow these steps:
 
 git clone [https://github.com/Princess-Jewel/releaf-earth-assessment](https://github.com/Princess-Jewel/releaf-earth-assessment) 
 
-### 2. Install dependencies
+### FRONTEND
 
-cd releaf_earth
+cd frontend
 
-npm install
 
-### 3. Set up environment variables
+### 1. Set up environment variables
 
 Make sure to create a .env file in the root of the frontend folder and add your Mapbox access token.
 You can use my access token:
 REACT_APP_MAPBOX_ACCESS_TOKEN=pk.eyJ1IjoicHJpbmNlc3MtamV3ZWwiLCJhIjoiY20zZ2N1MDM2MDJ3eDJxc2Q2MTNzbzdoeSJ9.EQTDAJbtCb0cMZrQDsNOhw
 
 
-### 4. Run the project
+npm install
+
+### 2. Run the project
 
 Start the development server:
 
 run npm start 
 
-This will start the project on http://localhost:3000, where you can interact with the map and add PKS dumpsites.
+This will start the project on http://localhost:3000, where you can interact with the map and add, fetch and update PKS dumpsites.
+
+### BACKEND
+
+cd backend
+
+
+
+### 1. Set up environment variables
+
+Make sure to create a .env file in the root of the backend folder and add the following 
+
+
+DB_HOST=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+DB_PORT=
+PORT=
+MONGO_URI=
+
+
+npm install
+
+### 2. Run the project
+
+Start the development server:
+
+npm run dev
+
+
+### API Endpoints
+Base URL: http://localhost:4000/api/mills
+
+1. Get All Dumpsites
+Method: GET
+Endpoint: /
+
+Response Data
+
+[
+  {
+    "_id": "id123",
+    "millName": "PKS Dumpsite",
+    "latitude": 12.34,
+    "longitude": 56.78,
+    "capacity": 100,
+    "status": "active"
+  }
+]
+
+
+2. Add a New Dumpsite
+Method: POST
+Endpoint: /
+
+Request Body
+
+{
+  "millName": "PKS Dumpsite",
+  "latitude": 12.34,
+  "longitude": 56.78,
+  "capacity": 100,
+  "status": "active"
+}
+
+3. Update a Dumpsite
+Method: PUT
+Endpoint: /:id
+
+Request Body
+
+{
+  "latitude": 12.34,
+  "longitude": 56.78,
+  "capacity": 150,
+  "status": "inactive"
+}
+
+
+
+### How to Use
+Open the application in the browser.
+
+Add a new dumpsite using the "Add PKS Dumpsite" form.
+
+View added dumpsites as markers on the map.
+
+Click on any marker to edit the dumpsite's details.
+
+
+### Development Workflow
+
+Run both servers concurrently:
+
+Frontend: npm start (in frontend/)
+
+Backend: npm run dev (in backend/)
+
+### Code changes:
+
+React components for frontend UI updates.
+
+Node.js routes and controllers for backend API changes.
+
+Database integration:
+
+Ensure MongoDB is running locally or use a cloud-based MongoDB instance.
