@@ -1,16 +1,26 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES6",
+//     "module": "commonjs",
+//     "rootDir": "./",
+//     "outDir": "./dist",
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "moduleResolution": "node",
+//   },
+//   "include": ["./**/*.ts"],
+//   "exclude": ["node_modules"],
+
+// }
+
 {
   "compilerOptions": {
     "target": "ES6",
     "module": "commonjs",
-    "rootDir": "./",
-    "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
-  },
-  "include": ["./**/*.ts"],
-  "exclude": ["node_modules"],
-
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
 }
-
 

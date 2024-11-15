@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import Mills from "../models/Mills";
 import mongoose from "mongoose";
 
@@ -60,17 +60,23 @@ export const updateMill = async (
 ): Promise<void> => {
   const { id } = req.params; // Extract the id from params
 
+
   // Check if the ID is valid
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(400).json({ message: "Invalid Mill ID" });
+    return; // Return here to exit the function early
   }
+
 
   try {
     // Update the mill using the provided ID and data from req.body
-    const mill = await Mills.findByIdAndUpdate(id, req.body, { new: true });
+    const mill = await Mills.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
 
     if (!mill) {
       res.status(404).json({ message: "Mill not found" });
+      return; // Return here to exit the function early
     }
 
     // Respond with a success message and the updated mill data
