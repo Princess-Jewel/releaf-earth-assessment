@@ -19,7 +19,7 @@ router.get("/mills", async (req: Request, res: Response) => {
 // Route to add a new mill
 router.post("/mills", addMill);
 
-// Route to update a new mill
+// Route to update a mill
 router.put("/mills/:id", updateMill);
 
 

@@ -3,6 +3,9 @@
   "dependencies": {
  
    
+  "cors": "^2.8.5",
+ 
+   
   "dotenv": "^16.4.5",
  
    
@@ -17,6 +20,9 @@
   },
  
   "devDependencies": {
+ 
+   
+  "@types/cors": "^2.8.17",
  
    
   "@types/express": "^5.0.0",

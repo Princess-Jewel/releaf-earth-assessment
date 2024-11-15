@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import millsData from "../data/milljson.json"; // data is stored in a JSON file
 import "mapbox-gl/dist/mapbox-gl.css";
+import axios from 'axios';
 
 // Make sure to define the Mapbox Access Token type
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN || "";
@@ -26,6 +26,26 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   const [longitude, setLongitude] = useState<string>("");
   const [capacity, setCapacity] = useState<string>("");
   const [status, setStatus] = useState<string>("active");
+  const [mills, setMills] = useState<MillData[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const fetchMills = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/mills');
+        console.log(response.data)
+        setMills(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching mills data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchMills();
+  }, []);
 
   useEffect(() => {
     if (mapContainerRef.current) {
@@ -39,7 +59,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
 
       mapRef.current.on("load", () => {
         // Plot mills on the map
-        millsData.forEach((mill: MillData) => {
+mills.forEach((mill: MillData) => {
           const {
             millName,
             latitude,
@@ -89,7 +109,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
     return () => {
       if (mapRef.current) mapRef.current.remove();
     };
-  }, []);
+  }, [mills]);
 
   // Function to add PKS dumpsite
   const addPKSDumpsite = (
