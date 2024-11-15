@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import axios from 'axios';
+import axios from "axios";
 
-// Make sure to define the Mapbox Access Token type
+
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN || "";
 
 interface MillData {
@@ -30,16 +30,14 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     const fetchMills = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/mills');
-        console.log(response.data)
+        const response = await axios.get("http://localhost:4000/api/mills");
         setMills(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching mills data:', error);
+        console.error("Error fetching mills data:", error);
         setLoading(false);
       }
     };
@@ -59,7 +57,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
 
       mapRef.current.on("load", () => {
         // Plot mills on the map
-mills.forEach((mill: MillData) => {
+        mills.forEach((mill: MillData) => {
           const {
             millName,
             latitude,
@@ -134,20 +132,48 @@ mills.forEach((mill: MillData) => {
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (latitude && longitude && capacity) {
-      addPKSDumpsite(longitude, latitude, parseInt(capacity), status);
-      // Reset form
+      const markerData = {
+        millName: "PKS Dumpsite", // or any name input from the user
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+        capacity: parseInt(capacity),
+        status,
+      };
+  
+      try {
+        const response = await fetch('http://localhost:4000/api/mills', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(markerData),
+        });
+  
+        if (response.ok) {
+          const addedMarker = await response.json();
+          console.log('Marker added:', addedMarker);
+          //  Add marker to the map immediately for a real-time update
+          addPKSDumpsite(latitude, longitude, parseInt(capacity), status);
+        } else {
+          console.error('Error adding marker');
+        }
+      } catch (error) {
+        console.error('Request error:', error);
+      }
+  
       setLatitude("");
       setLongitude("");
       setCapacity("");
       setStatus("active");
     } else {
-      alert("Please fill in all the fields!");
+      alert("Please fill in all fields");
     }
   };
+  
 
   return (
     <div>
