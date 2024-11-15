@@ -1,5 +1,5 @@
 import express, { Router, Request, Response } from "express";
-import { addMill } from "../controllers/millsController";
+import { addMill, updateMill } from "../controllers/millsController";
 import fs from "fs";
 import path from "path";
 
@@ -18,5 +18,9 @@ router.get("/mills", async (req: Request, res: Response) => {
 
 // Route to add a new mill
 router.post("/mills", addMill);
+
+// Route to update a new mill
+router.put("/mills/:id", updateMill);
+
 
 export default router;
