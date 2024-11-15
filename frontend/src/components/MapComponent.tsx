@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import axios from "axios";
+import LoadingSpinner from "../helpers/Loader";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN || "";
 
@@ -10,22 +11,13 @@ interface MillData {
   millName: string;
   latitude: number;
   longitude: number;
-  capacity?: number; // Added the capacity property
+  capacity?: number;
   p1Amount?: number;
   numTransactions?: number;
   p1PriceTon?: number;
   lastTransactionDate?: Date;
   status?: string;
 }
-
-// interface Dumpsite {
-//   _id: string;
-//   millName: string;
-//   latitude: number;
-//   longitude: number;
-//   capacity: number;
-//   status: string;
-// }
 
 interface MapComponentProps {}
 
@@ -41,7 +33,6 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const [popups, setPopups] = useState<Map<string, mapboxgl.Popup>>(new Map());
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [editMarkerId, setEditMarkerId] = useState<string | null>(null); // Stores marker ID for updates
   const [pksDumpsites, setPksDumpsites] = useState<
@@ -104,7 +95,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
           const daysAgo =
             (Date.now() - lastDate.getTime()) / (1000 * 60 * 60 * 24);
           let color = "red"; // older than two weeks
-          if (daysAgo <= 7) color = "green";
+          if (daysAgo <= 7) color = "blue";
           else if (daysAgo <= 14) color = "yellow";
 
           // Create a marker with the color
@@ -200,16 +191,10 @@ const MapComponent: React.FC<MapComponentProps> = () => {
       marker.setPopup(popup);
 
       popup.on("open", () => {
-        setPopups((prevPopups) => new Map(prevPopups).set(newId, popup));
         setIsPopupOpen(true);
       });
 
       popup.on("close", () => {
-        setPopups((prevPopups) => {
-          const updatedPopups = new Map(prevPopups);
-          updatedPopups.delete(newId);
-          return updatedPopups;
-        });
         setIsPopupOpen(false);
       });
 
@@ -251,16 +236,10 @@ const MapComponent: React.FC<MapComponentProps> = () => {
     marker.setPopup(popup);
 
     popup.on("open", () => {
-      setPopups((prevPopups) => new Map(prevPopups).set(markerData.id, popup));
       setIsPopupOpen(true);
     });
 
     popup.on("close", () => {
-      setPopups((prevPopups) => {
-        const updatedPopups = new Map(prevPopups);
-        updatedPopups.delete(markerData.id);
-        return updatedPopups;
-      });
       setIsPopupOpen(false);
     });
   };
@@ -305,7 +284,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   // Function to handle the form submission for adding a new marker (POST request)
   const handleAddSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true);
     if (latitude && longitude && capacity) {
       try {
         // Call the addPKSDumpsite function to handle the backend POST and frontend marker update
@@ -321,11 +300,12 @@ const MapComponent: React.FC<MapComponentProps> = () => {
         setLongitude("");
         setCapacity("");
         setStatus("active");
-
+        setLoading(false);
         setIsPopupOpen(false);
         setIsFormVisible(false);
       } catch (error) {
         console.error("Error during submission:", error);
+        setLoading(false);
         alert("Failed to add the dumpsite. Please try again.");
       }
     } else {
@@ -336,7 +316,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   // Function to handle the form submission for updating an existing marker (PUT request)
   const handleUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission behavior
-
+    setLoading(true);
     // Check if all required fields are filled out
     if (!latitude || !longitude || !capacity) {
       alert("Please fill in all fields");
@@ -393,9 +373,11 @@ const MapComponent: React.FC<MapComponentProps> = () => {
       setIsPopupOpen(false);
       setIsFormVisible(false);
       setEditMarkerId(null);
+      setLoading(false);
     } catch (error) {
       // Handle any errors that occur during the request
       console.error("Request error during update:", error);
+      setLoading(false);
       alert("An error occurred while updating the marker. Please try again.");
     }
   };
@@ -492,13 +474,13 @@ const MapComponent: React.FC<MapComponentProps> = () => {
             type="submit"
             className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600"
           >
-            Add PKS Dumpsite
+            {loading ? <LoadingSpinner /> : "Add PKS Dumpsite"}
           </button>
         </form>
       )}
 
       {/* Form to Edit PKS Dumpsite */}
-      {(isPopupOpen || window.innerWidth >= 1024) && (
+      {isPopupOpen && pksDumpsites.length > 0 && (
         <form
           onSubmit={handleUpdateSubmit}
           className="absolute top-10 left-1/2 transform -translate-x-1/2 lg:left-10 lg:transform-none bg-white p-6 rounded-lg shadow-lg max-w-md lg:w-[30%] mx-auto w-11/12 z-10"
@@ -575,9 +557,9 @@ const MapComponent: React.FC<MapComponentProps> = () => {
               onClick={() => {
                 editDumpsite(dumpsite.id); // Trigger the editDumpsite function with the specific dumpsite's id
               }}
-              className="lg:hidden bg-blue-500 text-white px-4 py-2 rounded-md fixed bottom-10 right-5 z-20"
+              className="bg-blue-500 w-full text-white py-2 rounded-md hover:bg-blue-600"
             >
-              Update PKS Dumpsite
+              {loading ? <LoadingSpinner /> : "Update PKS Dumpsite"}
             </button>
           ))}
         </form>
