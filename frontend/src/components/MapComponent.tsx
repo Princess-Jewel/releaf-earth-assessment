@@ -3,7 +3,6 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import axios from "axios";
 
-
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN || "";
 
 interface MillData {
@@ -29,6 +28,11 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   const [mills, setMills] = useState<MillData[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
+  const toggleFormVisibility = () => {
+    setIsFormVisible(!isFormVisible);
+  };
 
   useEffect(() => {
     const fetchMills = async () => {
@@ -134,7 +138,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (latitude && longitude && capacity) {
       const markerData = {
         millName: "PKS Dumpsite", // or any name input from the user
@@ -143,28 +147,28 @@ const MapComponent: React.FC<MapComponentProps> = () => {
         capacity: parseInt(capacity),
         status,
       };
-  
+
       try {
-        const response = await fetch('http://localhost:4000/api/mills', {
-          method: 'POST',
+        const response = await fetch("http://localhost:4000/api/mills", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(markerData),
         });
-  
+
         if (response.ok) {
           const addedMarker = await response.json();
-          console.log('Marker added:', addedMarker);
+          console.log("Marker added:", addedMarker);
           //  Add marker to the map immediately for a real-time update
           addPKSDumpsite(latitude, longitude, parseInt(capacity), status);
         } else {
-          console.error('Error adding marker');
+          console.error("Error adding marker");
         }
       } catch (error) {
-        console.error('Request error:', error);
+        console.error("Request error:", error);
       }
-  
+
       setLatitude("");
       setLongitude("");
       setCapacity("");
@@ -173,88 +177,96 @@ const MapComponent: React.FC<MapComponentProps> = () => {
       alert("Please fill in all fields");
     }
   };
-  
 
   return (
     <div>
       <div ref={mapContainerRef} style={{ height: "100vh", width: "100%" }} />
-
-      {/* Form to Add PKS Dumpsite */}
-      <form
-        onSubmit={handleSubmit}
-        className="absolute top-10 left-1/2 transform -translate-x-1/2 lg:left-10 lg:transform-none bg-white p-6 rounded-lg shadow-lg max-w-md lg:w-[30%] mx-auto w-11/12 z-10"
+      {/* Toggle Button for Mobile Only */}
+      <button
+        onClick={toggleFormVisibility}
+        className="lg:hidden bg-blue-500 text-white px-4 py-2 rounded-md fixed bottom-10 right-5 z-20"
       >
-        <h2 className="text-xl font-semibold mb-4">Add PKS Dumpsite</h2>
-
-        {/* Latitude Input */}
-        <div className="mb-4">
-          <label htmlFor="latitude" className="block text-gray-700">
-            Latitude:
-          </label>
-          <input
-            type="text"
-            id="latitude"
-            value={latitude}
-            onChange={(e) => setLatitude(e.target.value)}
-            required
-            className="w-full p-2 border border-gray-300 rounded-md mt-1"
-          />
-        </div>
-
-        {/* Longitude Input */}
-        <div className="mb-4">
-          <label htmlFor="longitude" className="block text-gray-700">
-            Longitude:
-          </label>
-          <input
-            type="text"
-            id="longitude"
-            value={longitude}
-            onChange={(e) => setLongitude(e.target.value)}
-            required
-            className="w-full p-2 border border-gray-300 rounded-md mt-1"
-          />
-        </div>
-
-        {/* Capacity Input */}
-        <div className="mb-4">
-          <label htmlFor="capacity" className="block text-gray-700">
-            Capacity (tons):
-          </label>
-          <input
-            type="number"
-            id="capacity"
-            value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
-            required
-            className="w-full p-2 border border-gray-300 rounded-md mt-1"
-          />
-        </div>
-
-        {/* Status Dropdown */}
-        <div className="mb-6">
-          <label htmlFor="status" className="block text-gray-700">
-            Status:
-          </label>
-          <select
-            id="status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md mt-1"
-          >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600"
+        {isFormVisible ? "Close PKS Dumpsite Form" : "Add PKS Dumpsite"}
+      </button>
+      {/* Form to Add PKS Dumpsite */}
+      {(isFormVisible || window.innerWidth >= 1024) && (
+        <form
+          onSubmit={handleSubmit}
+          className="absolute top-10 left-1/2 transform -translate-x-1/2 lg:left-10 lg:transform-none bg-white p-6 rounded-lg shadow-lg max-w-md lg:w-[30%] mx-auto w-11/12 z-10"
         >
-          Add PKS Dumpsite
-        </button>
-      </form>
+          <h2 className="text-xl font-semibold mb-4">Add PKS Dumpsite</h2>
+
+          {/* Latitude Input */}
+          <div className="mb-4">
+            <label htmlFor="latitude" className="block text-gray-700">
+              Latitude:
+            </label>
+            <input
+              type="text"
+              id="latitude"
+              value={latitude}
+              onChange={(e) => setLatitude(e.target.value)}
+              required
+              className="w-full p-2 border border-gray-300 rounded-md mt-1"
+            />
+          </div>
+
+          {/* Longitude Input */}
+          <div className="mb-4">
+            <label htmlFor="longitude" className="block text-gray-700">
+              Longitude:
+            </label>
+            <input
+              type="text"
+              id="longitude"
+              value={longitude}
+              onChange={(e) => setLongitude(e.target.value)}
+              required
+              className="w-full p-2 border border-gray-300 rounded-md mt-1"
+            />
+          </div>
+
+          {/* Capacity Input */}
+          <div className="mb-4">
+            <label htmlFor="capacity" className="block text-gray-700">
+              Capacity (tons):
+            </label>
+            <input
+              type="number"
+              id="capacity"
+              value={capacity}
+              onChange={(e) => setCapacity(e.target.value)}
+              required
+              className="w-full p-2 border border-gray-300 rounded-md mt-1"
+            />
+          </div>
+
+          {/* Status Dropdown */}
+          <div className="mb-6">
+            <label htmlFor="status" className="block text-gray-700">
+              Status:
+            </label>
+            <select
+              id="status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md mt-1"
+            >
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600"
+          >
+            Add PKS Dumpsite
+          </button>
+        </form>
+      )}
+      ;
     </div>
   );
 };
