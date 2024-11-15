@@ -1,5 +1,5 @@
 {
- 
+
   "dependencies": {
  
    
@@ -44,7 +44,9 @@
   "scripts": {
  
    
-  "dev": "nodemon --exec tsx server.ts"
+  "dev": "nodemon --exec tsx server.ts",
+  "build": "npm install && npx tsc",
+  "start": "node server.js"
  
   }
 }

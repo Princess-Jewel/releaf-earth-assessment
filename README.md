@@ -85,15 +85,22 @@ Make sure to create a .env file in the root of the backend folder and add the fo
 
 
 DB_HOST=
+
 DB_USER=
+
 DB_PASSWORD=
+
 DB_NAME=
+
 DB_PORT=
+
 PORT=
+
 MONGO_URI=
 
 
-npm install
+
+run npm install
 
 ### 2. Run the project
 
