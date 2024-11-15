@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "ESNext",
+    "module": "commonjs",
     "rootDir": "./",
     "outDir": "./dist",
     "strict": true,
@@ -9,7 +9,8 @@
     "moduleResolution": "node",
   },
   "include": ["./**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+
 }
 
 
