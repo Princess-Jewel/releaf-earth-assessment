@@ -12,6 +12,7 @@
 /build
 .env
 server.js
+/dist
 
 # misc
 .DS_Store
