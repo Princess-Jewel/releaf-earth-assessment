@@ -326,19 +326,16 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   const handleUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission behavior
     setLoading(true);
-    // Check if all required fields are filled out
-    if (!latitude || !longitude || !capacity) {
-      alert("Please fill in all fields");
-      return;
-    }
+
+ 
 
     const markerData = {
-      millName: "PKS Dumpsite", // Keep the millName static, or change if needed
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude),
-      capacity: parseFloat(capacity),
-      status,
-    };
+      millName: "PKS Dumpsite",
+      latitude: !isNaN(parseFloat(latitude)) ? parseFloat(latitude) : pksDumpsites[0]?.latitude || 0,
+      longitude: !isNaN(parseFloat(longitude)) ? parseFloat(longitude) : pksDumpsites[0]?.longitude || 0,
+      capacity: !isNaN(parseFloat(capacity)) ? parseFloat(capacity) : pksDumpsites[0]?.capacity || 0,
+      status: status || pksDumpsites[0]?.status || "active",
+    };    
 
     try {
       // Send the PUT request to update the existing marker
@@ -503,7 +500,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
               id="latitude"
               value={latitude}
               onChange={(e) => setLatitude(e.target.value)}
-              required
+             
               className="w-full p-2 border border-gray-300 rounded-md mt-1"
             />
           </div>
@@ -518,7 +515,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
               id="longitude"
               value={longitude}
               onChange={(e) => setLongitude(e.target.value)}
-              required
+              
               className="w-full p-2 border border-gray-300 rounded-md mt-1"
             />
           </div>
@@ -533,7 +530,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
               id="capacity"
               value={capacity}
               onChange={(e) => setCapacity(e.target.value)}
-              required
+             
               className="w-full p-2 border border-gray-300 rounded-md mt-1"
             />
           </div>
