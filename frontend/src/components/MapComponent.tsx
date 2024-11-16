@@ -22,6 +22,9 @@ interface MillData {
 interface MapComponentProps {}
 
 const MapComponent: React.FC<MapComponentProps> = () => {
+
+  const BASEURL = process.env.REACT_APP_BASE_URL
+
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const [pksMarkers, setPksMarkers] = useState<mapboxgl.Marker[]>([]);
@@ -51,7 +54,9 @@ const MapComponent: React.FC<MapComponentProps> = () => {
 
   const fetchMills = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/mills");
+  
+      const response = await axios.get(`${BASEURL}/mills`
+      );
 
       setMills(response.data);
       setLoading(false);
@@ -152,7 +157,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
       };
 
       // Call the backend API to create a new dumpsite
-      const response = await fetch("http://localhost:4000/api/mills", {
+      const response = await fetch(`${BASEURL}/mills`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -334,7 +339,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
     try {
       // Send the PUT request to update the existing marker
       const response = await fetch(
-        `http://localhost:4000/api/mills/${editMarkerId}`,
+        `${BASEURL}/mills/${editMarkerId}`,
         {
           method: "PUT",
           headers: {
