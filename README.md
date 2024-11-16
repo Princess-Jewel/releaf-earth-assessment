@@ -177,6 +177,13 @@ Frontend: npm start (in frontend/)
 
 Backend: npm run dev (in backend/)
 
+
+
+###  Database Schema
+The backend of this project leverages Mongoose, a powerful and flexible ODM (Object Data Modeling) library for MongoDB. The schema was carefully designed to handle the specific requirements of the application. The schema enforces required fields and unique constraints where applicable.
+Default values and enumerations (like status) ensure data integrity.
+
+
 ### Code changes:
 
 React components for frontend UI updates.
