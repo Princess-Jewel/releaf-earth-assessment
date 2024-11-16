@@ -22,8 +22,7 @@ interface MillData {
 interface MapComponentProps {}
 
 const MapComponent: React.FC<MapComponentProps> = () => {
-
-  const BASEURL = process.env.REACT_APP_BASE_URL
+  const BASEURL = process.env.REACT_APP_BASE_URL;
 
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -41,6 +40,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   const [pksDumpsites, setPksDumpsites] = useState<
     {
       id: string;
+      millName: string;
       latitude: number;
       longitude: number;
       capacity: number;
@@ -48,15 +48,17 @@ const MapComponent: React.FC<MapComponentProps> = () => {
     }[]
   >([]);
 
+
+
+
+
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
   };
 
   const fetchMills = async () => {
     try {
-  
-      const response = await axios.get(`${BASEURL}/mills`
-      );
+      const response = await axios.get(`${BASEURL}/mills`);
 
       setMills(response.data);
       setLoading(false);
@@ -67,6 +69,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
   };
   useEffect(() => {
     fetchMills();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -208,6 +211,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
         ...prevDumpsites,
         {
           id: newId, // Use the id from the backend
+          millName: "PKS Dumpsite",
           latitude: newLatitude,
           longitude: newLongitude,
           capacity: newCapacity,
@@ -338,16 +342,13 @@ const MapComponent: React.FC<MapComponentProps> = () => {
 
     try {
       // Send the PUT request to update the existing marker
-      const response = await fetch(
-        `${BASEURL}/mills/${editMarkerId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(markerData), // Send the updated data
-        }
-      );
+      const response = await fetch(`${BASEURL}/mills/${editMarkerId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(markerData), // Send the updated data
+      });
 
       // Check if the response is successful
       if (!response.ok) {
@@ -409,7 +410,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
       {(isFormVisible || window.innerWidth >= 1024) && (
         <form
           onSubmit={handleAddSubmit}
-          className="absolute top-10 left-1/2 transform -translate-x-1/2 lg:left-10 lg:transform-none bg-white p-6 rounded-lg shadow-lg max-w-md lg:w-[30%] mx-auto w-11/12 z-10"
+          className="absolute top-2 lg:top-10 left-1/2 transform -translate-x-1/2 lg:left-10 lg:transform-none bg-white p-6 rounded-lg shadow-lg max-w-md lg:w-[30%] mx-auto w-11/12 z-10"
         >
           <h2 className="text-xl font-semibold mb-4">Add PKS Dumpsite</h2>
 
@@ -488,7 +489,7 @@ const MapComponent: React.FC<MapComponentProps> = () => {
       {isPopupOpen && pksDumpsites.length > 0 && (
         <form
           onSubmit={handleUpdateSubmit}
-          className="absolute top-10 left-1/2 transform -translate-x-1/2 lg:left-10 lg:transform-none bg-white p-6 rounded-lg shadow-lg max-w-md lg:w-[30%] mx-auto w-11/12 z-10"
+          className="absolute top-2 lg:top-10  left-1/2 transform -translate-x-1/2 lg:left-10 lg:transform-none bg-white p-6 rounded-lg shadow-lg max-w-md lg:w-[30%] mx-auto w-11/12 z-10"
         >
           <h2 className="text-xl font-semibold mb-4">Edit PKS Dumpsite</h2>
 
@@ -555,18 +556,14 @@ const MapComponent: React.FC<MapComponentProps> = () => {
 
           {/* Submit Button */}
 
-          {pksDumpsites.map((dumpsite) => (
-            <button
-              // type='submit'
-              key={dumpsite.id}
-              onClick={() => {
-                editDumpsite(dumpsite.id); // Trigger the editDumpsite function with the specific dumpsite's id
-              }}
-              className="bg-blue-500 w-full text-white py-2 rounded-md hover:bg-blue-600"
-            >
-              {loading ? <LoadingSpinner /> : "Update PKS Dumpsite"}
-            </button>
-          ))}
+          <button
+            onClick={() => {
+              editDumpsite(pksDumpsites[0].id); // Trigger the editDumpsite function
+            }}
+            className="bg-blue-500 w-full text-white py-2 rounded-md hover:bg-blue-600"
+          >
+            {loading ? <LoadingSpinner /> : "Update Dumpsite"}
+          </button>
         </form>
       )}
     </div>
