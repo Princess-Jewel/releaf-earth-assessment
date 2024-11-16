@@ -36,7 +36,7 @@
 
     "dev": "nodemon --exec tsx server.ts",
 
-    "build": "npm install && npx tsc",
+    "build": "npm install && npx tsc && npm run copy-json",
 
     "start": "node ./dist/server.js",
 
