@@ -110,11 +110,11 @@ npm run dev
 
 
 ### API Endpoints
-Base URL: http://localhost:4000/api/mills
+Base URL: http://localhost:4000/api
 
 1. Get All Dumpsites
 Method: GET
-Endpoint: /
+Endpoint: /mills
 
 Response Data
 
@@ -132,7 +132,7 @@ Response Data
 
 2. Add a New Dumpsite
 Method: POST
-Endpoint: /
+Endpoint: /mills
 
 Request Body
 
@@ -146,7 +146,7 @@ Request Body
 
 3. Update a Dumpsite
 Method: PUT
-Endpoint: /:id
+Endpoint: mills/:id
 
 Request Body
 
@@ -186,3 +186,20 @@ Node.js routes and controllers for backend API changes.
 Database integration:
 
 Ensure MongoDB is running locally or use a cloud-based MongoDB instance.
+
+### Deployment Workflow
+
+Backend is deployed on Railway[https://railway.app/](https://railway.app/) 
+
+Frontend is deployed on Vercel[https://vercel.com/](https://vercel.com/) 
+
+### Deployment Link Backend
+
+[https://profound-strength-production.up.railway.app/api](https://profound-strength-production.up.railway.app/api) 
+
+
+### Deployment Link Frontend
+
+[https://releaf-earth-assessment.vercel.app/](https://releaf-earth-assessment.vercel.app/) 
+
+
